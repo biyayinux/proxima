@@ -23,3 +23,10 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files (ignore all .env variants)
+.env*
+.env
+.env.local
+.env.production
+.env.development
