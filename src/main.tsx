@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './pages/index';
 import SignIn from './pages/auth/signIn';
+import SignUp from './pages/auth/signUp';
+import AddUser from './pages/auth/addUser';
 import Profile from './pages/users/profile';
 import './assets/css/index.css';
 
@@ -16,6 +18,8 @@ root.render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/addUser" element={<AddUser />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>

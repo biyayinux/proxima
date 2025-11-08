@@ -24,10 +24,10 @@ function Home() {
       </p>
       <div className="flex gap-4">
         <Link
-          to="/signin"
+          to="/signUp"
           className="px-4 py-2 border border-current rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition"
         >
-          Connexion Google
+          S'inscrire
         </Link>
         <button
           onClick={handleToggleTheme}
