@@ -1,51 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-interface User {
-  name: string;
-  email: string;
-}
-
-interface ExtendedUser extends User {
-  username: string;
-  phone: string;
-  customPicture?: string;
-}
+import { useAddUser } from '../../hooks/users/addUser';
 
 function AddUser() {
-  const [user, setUser] = useState<User | null>(null);
-  const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
-  const [preview, setPreview] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    document.title = 'Compléter votre profil — Proxima';
-    const stored = localStorage.getItem('user');
-    if (stored) setUser(JSON.parse(stored));
-    else navigate('/signUp');
-  }, [navigate]);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSave = () => {
-    if (!user) return;
-    const newUser: ExtendedUser = {
-      ...user,
-      username,
-      phone,
-      customPicture: preview || '/avatar.png',
-    };
-    localStorage.setItem('user', JSON.stringify(newUser));
-    navigate('/profile');
-  };
+  const {
+    user,
+    username,
+    setUsername,
+    phone,
+    setPhone,
+    preview,
+    handleImageUpload,
+    handleSave,
+    loading,
+    error,
+  } = useAddUser();
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 px-4">
@@ -90,11 +57,13 @@ function AddUser() {
           <p className="mt-2 text-sm opacity-80">
             <strong>Votre Email {user.email}</strong>
           </p>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             onClick={handleSave}
-            className="mt-4 px-4 py-2 border border-current rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+            disabled={loading}
+            className="mt-4 px-4 py-2 border border-current rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition disabled:opacity-50"
           >
-            Enregistrer et continuer
+            {loading ? 'Enregistrement...' : 'Enregistrer et continuer'}
           </button>
         </div>
       )}

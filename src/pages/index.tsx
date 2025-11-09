@@ -1,4 +1,4 @@
-import { useTheme } from '../../utils/theme';
+import { useTheme } from '../utils/theme';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
