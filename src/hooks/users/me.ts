@@ -15,12 +15,12 @@ export function useMe() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fonction de déconnexion
+  // Déconnexion
   const signOut = () => {
-    localStorage.removeItem('token'); // Supprime le token JWT
-    localStorage.removeItem('user'); // Supprime les données utilisateur
-    setUser(null); // Réinitialise l'état local
-    navigate('/signin'); // Redirige vers la page de connexion
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    navigate('/signin');
   };
 
   useEffect(() => {
@@ -35,12 +35,12 @@ export function useMe() {
     const parsedUser = JSON.parse(storedUser);
     setUser(parsedUser);
 
-    // Mettre le titre de la page
-    document.title = `Profil — ${parsedUser.nom} — Proxima`;
+    // Définit le titre immédiatement
+    document.title = `Profil — ${parsedUser.nom || '...'} — Proxima`;
 
     setLoading(false);
 
-    // Vérification serveur en arrière-plan
+    // Vérification côté serveur
     const verifyServer = async () => {
       try {
         const res = await fetch(
@@ -49,13 +49,13 @@ export function useMe() {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
+
         if (res.ok) {
           const data = await res.json();
-          setUser(data.user); // Mettre à jour si nécessaire
-          // Mettre à jour le titre si le nom a changé
-          if (data.user.nom) {
-            document.title = `Profil — ${data.user.nom} — Proxima`;
-          }
+          setUser(data.user);
+
+          // Met à jour le titre même si le nom a changé
+          document.title = `Profil — ${data.user?.nom || '...'} — Proxima`;
         }
       } catch (err) {
         console.warn('Impossible de vérifier le token côté serveur ', err);
