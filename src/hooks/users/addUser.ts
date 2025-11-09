@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toBase64 } from '../../utils/imageBase64';
+import { toBase64 } from '../../utils/images/imageBase64';
 
 // Interfaces utilisateur
 interface User {

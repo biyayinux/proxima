@@ -1,4 +1,4 @@
-import { base64ToImageSrc } from '../../utils/base64Image';
+import { base64ToImageSrc } from '../../utils/images/base64Image';
 import { formatDateFR } from '../../utils/date';
 import { useMe } from '../../hooks/users/me';
 

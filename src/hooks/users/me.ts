@@ -25,41 +25,44 @@ export function useMe() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
+    const storedUser = localStorage.getItem('user');
+
+    if (!token || !storedUser) {
       navigate('/signin');
       return;
     }
 
-    const fetchProfile = async () => {
+    const parsedUser = JSON.parse(storedUser);
+    setUser(parsedUser);
+
+    // Mettre le titre de la page
+    document.title = `Profil — ${parsedUser.nom} — Proxima`;
+
+    setLoading(false);
+
+    // Vérification serveur en arrière-plan
+    const verifyServer = async () => {
       try {
         const res = await fetch(
           `${import.meta.env.VITE_MIDDLEWARE_URL}/api/auth/me`,
           {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           },
         );
-
-        if (!res.ok) throw new Error('Non autorisé');
-
-        const data = await res.json();
-        if (!data || !data.user)
-          throw new Error('Données utilisateur manquantes');
-
-        setUser(data.user);
-        document.title = `Profil — ${data.user.nom || 'Utilisateur'}`;
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user); // Mettre à jour si nécessaire
+          // Mettre à jour le titre si le nom a changé
+          if (data.user.nom) {
+            document.title = `Profil — ${data.user.nom} — Proxima`;
+          }
+        }
       } catch (err) {
-        console.error('Erreur récupération profil ', err);
-        signOut();
-      } finally {
-        setLoading(false);
+        console.warn('Impossible de vérifier le token côté serveur ', err);
       }
     };
 
-    fetchProfile();
+    verifyServer();
   }, [navigate]);
 
   return { user, loading, signOut };
