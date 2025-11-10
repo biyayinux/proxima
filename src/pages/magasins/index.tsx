@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useMe } from '../../hooks/users/me';
 import { base64ToImageSrc } from '../../utils/images/base64Image';
+import { formatDateFR } from '../../utils/date';
+import MagasinForm from '../../components/articles/addArticle';
 
-interface Magasin {
+export interface Magasin {
   id: number;
   nom: string;
-  logo?: string;
-  dt?: string;
+  latitude?: number;
+  longitude?: number;
+  logo?: string; // Base64 ou URL
+  dt?: string; // Date de création
 }
 
 function MesMagasins() {
@@ -16,11 +20,14 @@ function MesMagasins() {
   const [error, setError] = useState<string | null>(null);
   const [loadingMagasins, setLoadingMagasins] = useState(false);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Titre de la page
   useEffect(() => {
     document.title = `Mes magasins — ${user?.nom || '...'} — Proxima`;
   }, [user]);
 
+  // Récupération des magasins
   useEffect(() => {
     const fetchMagasins = async () => {
       if (!user) return;
@@ -55,6 +62,12 @@ function MesMagasins() {
     fetchMagasins();
   }, [user]);
 
+  const selectedMagasinId = searchParams.get('id');
+  const selectedMagasin =
+    selectedMagasinId && magasins.length > 0
+      ? magasins.find((m) => m.id === Number(selectedMagasinId)) || null
+      : null;
+
   if (loading)
     return (
       <p className="min-h-screen flex items-center justify-center">
@@ -73,14 +86,16 @@ function MesMagasins() {
           + Ajouter un magasin
         </button>
       </div>
+      <MagasinForm selectedMagasin={selectedMagasin} />
       {loadingMagasins && <p>Chargement des magasins...</p>}
       {error && <p className="text-red-600">{error}</p>}
       {magasins.length === 0 && !loadingMagasins && <p>Aucun magasin trouvé</p>}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-6xl">
         {magasins.map((magasin) => (
           <div
             key={magasin.id}
-            onClick={() => navigate(`/magasin/${magasin.id}`)}
+            onClick={() => setSearchParams({ id: String(magasin.id) })}
             className="cursor-pointer border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition"
           >
             <img
@@ -91,6 +106,16 @@ function MesMagasins() {
               className="w-24 h-24 object-cover rounded"
             />
             <h2 className="font-semibold text-lg">{magasin.nom}</h2>
+            {magasin.latitude !== undefined &&
+              magasin.longitude !== undefined && (
+                <p className="text-sm">
+                  Latitude: {magasin.latitude.toFixed(5)}, Longitude:{' '}
+                  {magasin.longitude.toFixed(5)}
+                </p>
+              )}
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              Créé le {formatDateFR(magasin.dt ?? '')}
+            </p>
           </div>
         ))}
       </div>

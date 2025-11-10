@@ -8,7 +8,6 @@ import AddUser from './pages/auth/addUser';
 import Profile from './pages/users/profile';
 import MagasinUser from './pages/magasins/index';
 import AddMagasin from './pages/magasins/addMagasin';
-import MagasinDetail from './pages/magasins/[id]';
 import Navbar from './components/navbar';
 import './assets/css/index.css';
 
@@ -28,7 +27,6 @@ root.render(
         <Route path="/profile" element={<Profile />} />
         <Route path="/magasin" element={<MagasinUser />} />
         <Route path="/magasin/add" element={<AddMagasin />} />
-        <Route path="/magasin/:id" element={<MagasinDetail />} />
       </Routes>
     </BrowserRouter>
   </GoogleOAuthProvider>,
