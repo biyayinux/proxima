@@ -6,9 +6,7 @@ import { base64ToImageSrc } from '../../utils/images/base64Image';
 interface Magasin {
   id: number;
   nom: string;
-  latitude?: number;
-  longitude?: number;
-  logo?: string; // Base64 ou URL
+  logo?: string;
   dt?: string;
 }
 
@@ -19,12 +17,10 @@ function MesMagasins() {
   const [loadingMagasins, setLoadingMagasins] = useState(false);
   const navigate = useNavigate();
 
-  // Mettre le titre
   useEffect(() => {
     document.title = `Mes magasins — ${user?.nom || '...'} — Proxima`;
   }, [user]);
 
-  // Récupération des magasins
   useEffect(() => {
     const fetchMagasins = async () => {
       if (!user) return;
@@ -84,7 +80,8 @@ function MesMagasins() {
         {magasins.map((magasin) => (
           <div
             key={magasin.id}
-            className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center gap-2"
+            onClick={() => navigate(`/magasin/${magasin.id}`)}
+            className="cursor-pointer border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-900 transition"
           >
             <img
               src={
@@ -94,11 +91,6 @@ function MesMagasins() {
               className="w-24 h-24 object-cover rounded"
             />
             <h2 className="font-semibold text-lg">{magasin.nom}</h2>
-            {magasin.latitude && magasin.longitude && (
-              <p className="text-sm">
-                {magasin.latitude.toFixed(5)}, {magasin.longitude.toFixed(5)}
-              </p>
-            )}
           </div>
         ))}
       </div>
