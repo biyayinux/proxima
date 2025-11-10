@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../utils/theme';
 import { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Home, User, PlusCircle } from 'lucide-react';
+import { Menu, X, Sun, Moon, Home, User, Store } from 'lucide-react';
 
 function Navbar() {
   const { theme, handleToggleTheme } = useTheme();
@@ -12,7 +12,7 @@ function Navbar() {
     const titles: Record<string, string> = {
       '/': 'Accueil — Proxima',
       '/profile': 'Profil — Proxima',
-      '/magasins/add': 'Ajouter magasin — Proxima',
+      '/magasin': 'Magasin magasin — Proxima',
     };
     document.title = titles[location.pathname] || 'Proxima';
   }, [location.pathname]);
@@ -37,8 +37,8 @@ function Navbar() {
           <Link to="/profile" className={linkClass('/profile')}>
             <User size={18} /> Profil
           </Link>
-          <Link to="/magasins/add" className={linkClass('/magasins/add')}>
-            <PlusCircle size={18} /> Ajouter
+          <Link to="/magasin" className={linkClass('/magasin')}>
+            <Store size={18} /> Magasin
           </Link>
           <button
             onClick={handleToggleTheme}
@@ -72,11 +72,11 @@ function Navbar() {
             <User size={18} /> Profil
           </Link>
           <Link
-            to="/magasins/add"
+            to="/magasin"
             onClick={() => setMenuOpen(false)}
-            className={linkClass('/magasins/add')}
+            className={linkClass('/magasin')}
           >
-            <PlusCircle size={18} /> Ajouter
+            <Store size={18} /> Magasin
           </Link>
           <button
             onClick={() => {

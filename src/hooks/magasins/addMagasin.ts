@@ -71,7 +71,7 @@ export function useAddMagasin() {
       const base64Logo = logoFile ? await toBase64(logoFile) : null;
 
       const res = await fetch(
-        `${import.meta.env.VITE_MIDDLEWARE_URL}/api/magasins/add`,
+        `${import.meta.env.VITE_MIDDLEWARE_URL}/api/magasin/add`,
         {
           method: 'POST',
           headers: {
