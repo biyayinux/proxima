@@ -10,6 +10,7 @@ import AddMagasin from './pages/magasins/userAddMagasin';
 import MagasinUser from './pages/magasins/getMagasinsUser';
 import MagasinDetail from './pages/magasins/[id]';
 import UserAddArticle from './pages/articles/userAddArticle';
+import Search from './pages/search/searchPhoto';
 import Navbar from './components/navbar';
 import './assets/css/index.css';
 
@@ -31,6 +32,7 @@ root.render(
         <Route path="/magasin" element={<MagasinUser />} />
         <Route path="/magasin/:id" element={<MagasinDetail />} />
         <Route path="/magasin/article/add/:id" element={<UserAddArticle />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </BrowserRouter>
   </GoogleOAuthProvider>,

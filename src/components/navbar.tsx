@@ -1,23 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../utils/theme';
-import { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Home, User, Store } from 'lucide-react';
+import { useState } from 'react';
+import { Menu, X, Sun, Moon, Home, User, Store, Search } from 'lucide-react';
 
 function Navbar() {
   const { theme, handleToggleTheme } = useTheme();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const titles: Record<string, string> = {
-      '/': 'Accueil — Proxima',
-      '/profile': 'Profil — Proxima',
-      '/magasin': 'Magasin magasin — Proxima',
-    };
-    document.title = titles[location.pathname] || 'Proxima';
-  }, [location.pathname]);
-
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
   const linkClass = (path: string) =>
     `flex items-center gap-2 hover:underline ${
@@ -34,18 +26,21 @@ function Navbar() {
           <Link to="/" className={linkClass('/')}>
             <Home size={18} /> Accueil
           </Link>
-          <Link to="/profile" className={linkClass('/profile')}>
-            <User size={18} /> Profil
+          <Link to="/search" className={linkClass('/search')}>
+            <Search size={18} /> Recherche
           </Link>
           <Link to="/magasin" className={linkClass('/magasin')}>
             <Store size={18} /> Magasin
+          </Link>
+          <Link to="/profile" className={linkClass('/profile')}>
+            <User size={18} /> Profil
           </Link>
           <button
             onClick={handleToggleTheme}
             className="flex items-center gap-2 px-3 py-1.5 border border-current rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            Mode {theme === 'dark' ? 'clair' : 'sombre'}
+            {theme === 'dark' ? 'Clair' : 'Sombre'}
           </button>
         </div>
         <button
@@ -57,36 +52,39 @@ function Navbar() {
       </div>
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-3 px-4 pb-4 border-t border-gray-200 dark:border-gray-800">
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
-            className={linkClass('/')}
-          >
+          <Link to="/" onClick={closeMenu} className={linkClass('/')}>
             <Home size={18} /> Accueil
           </Link>
           <Link
-            to="/profile"
-            onClick={() => setMenuOpen(false)}
-            className={linkClass('/profile')}
+            to="/search"
+            onClick={closeMenu}
+            className={linkClass('/search')}
           >
-            <User size={18} /> Profil
+            <Search size={18} /> Recherche
           </Link>
           <Link
             to="/magasin"
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             className={linkClass('/magasin')}
           >
             <Store size={18} /> Magasin
           </Link>
+          <Link
+            to="/profile"
+            onClick={closeMenu}
+            className={linkClass('/profile')}
+          >
+            <User size={18} /> Profil
+          </Link>
           <button
             onClick={() => {
               handleToggleTheme();
-              setMenuOpen(false);
+              closeMenu();
             }}
             className="flex items-center gap-2 px-3 py-1.5 border border-current rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            Mode {theme === 'dark' ? 'clair' : 'sombre'}
+            {theme === 'dark' ? 'Clair' : 'Sombre'}
           </button>
         </div>
       )}
