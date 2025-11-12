@@ -23,7 +23,7 @@ function Navbar() {
           Proxima
         </Link>
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/" className={linkClass('/')}>
+          <Link to="/all" className={linkClass('/')}>
             <Home size={18} /> Accueil
           </Link>
           <Link to="/search" className={linkClass('/search')}>

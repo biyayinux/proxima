@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import Home from './pages/index';
+import Home from './pages/home';
 import SignIn from './pages/auth/signIn';
 import SignUp from './pages/auth/signUp';
 import AddUser from './pages/auth/addUser';
@@ -11,6 +11,7 @@ import MagasinUser from './pages/magasins/getMagasinsUser';
 import MagasinDetail from './pages/magasins/[id]';
 import UserAddArticle from './pages/articles/userAddArticle';
 import Search from './pages/search/searchPhoto';
+import All from './pages/all';
 import Navbar from './components/navbar';
 import './assets/css/index.css';
 
@@ -33,6 +34,7 @@ root.render(
         <Route path="/magasin/:id" element={<MagasinDetail />} />
         <Route path="/magasin/article/add/:id" element={<UserAddArticle />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/all" element={<All />} />
       </Routes>
     </BrowserRouter>
   </GoogleOAuthProvider>,
