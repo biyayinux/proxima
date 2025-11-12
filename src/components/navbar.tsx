@@ -52,7 +52,7 @@ function Navbar() {
       </div>
       {menuOpen && (
         <div className="md:hidden flex flex-col gap-3 px-4 pb-4 border-t border-gray-200 dark:border-gray-800">
-          <Link to="/" onClick={closeMenu} className={linkClass('/')}>
+          <Link to="/all" onClick={closeMenu} className={linkClass('/')}>
             <Home size={18} /> Accueil
           </Link>
           <Link

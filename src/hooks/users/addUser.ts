@@ -14,7 +14,7 @@ interface ExtendedUser extends User {
   customPicture?: string;
 }
 
-// Hook personnalisé pour l'inscription
+// Hook pour l'inscription
 function useSignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,12 +42,11 @@ function useSignUp() {
       if (!response.ok)
         throw new Error(data.error || 'Erreur lors de la création du compte');
 
-      // Stocker le token JWT reçu
-      localStorage.setItem('token ', data.token);
+      localStorage.setItem('token', data.token);
       return data;
     } catch (err: any) {
       setError(err.message);
-      console.error('Erreur API ', err);
+      console.error('Erreur API', err);
       throw err;
     } finally {
       setLoading(false);
@@ -57,17 +56,18 @@ function useSignUp() {
   return { signUp, loading, error };
 }
 
-// Hook principal pour gérer la logique complète du composant AddUser
+// Hook principal pour AddUser
 export function useAddUser() {
   const [user, setUser] = useState<User | null>(null);
   const [username, setUsername] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+243 ');
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const navigate = useNavigate();
   const { signUp, loading, error } = useSignUp();
 
+  // Récupération de l'utilisateur depuis localStorage
   useEffect(() => {
     document.title = 'Compléter votre profil — Proxima';
     const stored = localStorage.getItem('user');
@@ -75,6 +75,7 @@ export function useAddUser() {
     else navigate('/signUp');
   }, [navigate]);
 
+  // Upload d'image
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected) {
@@ -85,6 +86,24 @@ export function useAddUser() {
     }
   };
 
+  // Gestion du format du numéro de téléphone
+  const handlePhoneChange = (value: string) => {
+    // Supprimer tout sauf les chiffres
+    const digits = value.replace(/\D/g, '');
+    // Retirer l’indicatif +243
+    const number = digits.startsWith('243')
+      ? digits.slice(3, 12)
+      : digits.slice(0, 9);
+    // Limiter à 9 chiffres
+    const limited = number.slice(0, 9);
+
+    // Formater en groupes de 3 chiffres
+    const formatted = '+243 ' + limited.replace(/(\d{3})(?=\d)/g, '$1 ').trim();
+
+    setPhone(formatted);
+  };
+
+  // Sauvegarde
   const handleSave = async () => {
     if (!user) return;
 
@@ -102,7 +121,7 @@ export function useAddUser() {
       ...user,
       username,
       phone,
-      customPicture: preview || '/avatar.png',
+      customPicture: preview || undefined,
     };
 
     try {
@@ -115,7 +134,7 @@ export function useAddUser() {
 
       localStorage.setItem('user ', JSON.stringify(newUser));
       console.log('Utilisateur créé ', result);
-      navigate('/profile');
+      navigate('/all');
     } catch (err) {
       console.error('Erreur lors de l’inscription ', err);
     }
@@ -126,7 +145,7 @@ export function useAddUser() {
     username,
     setUsername,
     phone,
-    setPhone,
+    setPhone: handlePhoneChange,
     preview,
     handleImageUpload,
     handleSave,
