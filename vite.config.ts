@@ -1,16 +1,18 @@
-import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+
+    // ⚡ Progressive Web App configuration
     VitePWA({
-      registerType: 'prompt',
-      injectRegister: false,
+      registerType: 'autoUpdate', // met à jour automatiquement le service worker
+      injectRegister: 'auto', // injecte automatiquement le code d’enregistrement du SW
 
       pwaAssets: {
         disabled: false,
@@ -21,16 +23,23 @@ export default defineConfig({
         name: 'Proxima',
         short_name: 'Proxima',
         description:
-          "Mise en place d'une application intelligente pour la géolocalisation du magasin le plus proche et la reconnaissance des articles demandés par le client en fonction de leur image",
+          'Application intelligente pour la géolocalisation du magasin le plus proche et la reconnaissance d’articles via image',
         theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/',
+        orientation: 'portrait-primary',
       },
 
+      // ⚙️ Configuration du service worker
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,json}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+        skipWaiting: true, // ⚡ active immédiatement la nouvelle version du SW
       },
 
+      // 🚧 Mode développement
       devOptions: {
         enabled: false,
         navigateFallback: 'index.html',
