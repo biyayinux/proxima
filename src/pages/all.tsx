@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import { base64ToImageSrc } from '../utils/images/base64Image';
 import { formatNumber } from '../utils/number';
 
-interface Utilisateur {
-  id: number;
-  nom: string;
-  telephone: string;
-  photo_profil?: string | null;
-}
-
 interface Magasin {
   id: number;
   nom: string;
@@ -22,15 +15,12 @@ interface Article {
   nom: string;
   prix: number;
   devise: string;
-  photos_json: string;
-  magasin_nom?: string | null;
+  photo_article?: string | null;
   magasin_logo?: string | null;
-  utilisateur_nom?: string | null; // Nom du propriétaire
-  utilisateur_photo_profil?: string | null; // Photo du propriétaire
+  utilisateur_photo_profil?: string | null;
 }
 
 export default function AllData() {
-  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
   const [magasins, setMagasins] = useState<Magasin[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +49,6 @@ export default function AllData() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur lors du chargement');
 
-      setUtilisateurs(data.utilisateurs || []);
       setMagasins(data.magasins || []);
       setArticles(data.articles || []);
     } catch (err: any) {
@@ -78,29 +67,6 @@ export default function AllData() {
   return (
     <div className="min-h-screen px-4 py-6 bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">Utilisateurs</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {utilisateurs.map((u) => (
-              <div
-                key={u.id}
-                className="border border-gray-300 dark:border-gray-700 rounded-lg p-3 flex flex-col items-center text-center bg-gray-50 dark:bg-gray-900"
-              >
-                <img
-                  src={
-                    u.photo_profil
-                      ? base64ToImageSrc(u.photo_profil)
-                      : '/avatar.png'
-                  }
-                  alt={u.nom}
-                  className="w-20 h-20 object-cover rounded-full mb-2"
-                />
-                <h3 className="font-semibold">{u.nom}</h3>
-                <p className="text-xs text-gray-500">{u.telephone}</p>
-              </div>
-            ))}
-          </div>
-        </section>
         <section className="mb-10">
           <h2 className="text-2xl font-bold mb-4">Magasins</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,6 +92,7 @@ export default function AllData() {
                     alt={m.utilisateur_nom || 'Propriétaire'}
                     className="w-10 h-10 object-cover rounded-full mb-1"
                   />
+                  <p className="text-sm">{m.utilisateur_nom}</p>
                 </div>
               </div>
             ))}
@@ -135,19 +102,14 @@ export default function AllData() {
           <h2 className="text-2xl font-bold mb-4">Articles</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {articles.map((a) => {
-              let photos: string[] = [];
-              try {
-                photos = JSON.parse(a.photos_json || '[]');
-              } catch {
-                photos = [];
-              }
-
-              const articlePhoto = photos[0]
-                ? base64ToImageSrc(photos[0])
+              const articlePhoto = a.photo_article
+                ? base64ToImageSrc(a.photo_article)
                 : '/avatar.png';
+
               const magasinLogo = a.magasin_logo
                 ? base64ToImageSrc(a.magasin_logo)
                 : '/avatar.png';
+
               const proprietairePhoto = a.utilisateur_photo_profil
                 ? base64ToImageSrc(a.utilisateur_photo_profil)
                 : '/avatar.png';
@@ -162,7 +124,6 @@ export default function AllData() {
                     alt={a.nom}
                     className="w-24 h-24 object-cover rounded-md"
                   />
-
                   <h3 className="font-semibold text-lg text-center">{a.nom}</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
                     {formatNumber(a.prix)} {a.devise}
