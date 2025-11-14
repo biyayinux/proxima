@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { base64ToImageSrc } from '../utils/images/base64Image';
 import { formatNumber } from '../utils/number';
+
+import { Store, Package, User } from 'lucide-react';
 
 interface Magasin {
   id: number;
@@ -25,6 +28,7 @@ export default function AllData() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = 'Accueil — Proxima';
@@ -60,29 +64,42 @@ export default function AllData() {
   };
 
   if (loading)
-    return <p className="text-center text-gray-500 mt-10">Chargement...</p>;
+    return (
+      <p className="text-center text-gray-500 mt-10 animate-pulse">
+        Chargement...
+      </p>
+    );
+
   if (error)
-    return <p className="text-center text-red-600 mt-10">Erreur : {error}</p>;
+    return (
+      <p className="text-center text-red-600 mt-10 font-semibold">
+        Erreur {error}
+      </p>
+    );
 
   return (
     <div className="min-h-screen px-4 py-6 bg-white dark:bg-black text-black dark:text-white transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">Magasins</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Store className="w-6 h-6" />
+            <h2 className="text-2xl font-bold">Magasins</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {magasins.map((m) => (
               <div
                 key={m.id}
-                className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center gap-3 bg-gray-50 dark:bg-gray-900"
+                onClick={() => navigate(`/magasin/detail/${m.id}`)}
+                className="cursor-pointer border border-gray-300 dark:border-gray-700 rounded-2xl p-5 flex flex-col items-center gap-3 
+                           bg-gray-50 dark:bg-gray-900 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 <img
                   src={m.logo ? base64ToImageSrc(m.logo) : '/avatar.png'}
                   alt={m.nom}
-                  className="w-24 h-24 object-cover rounded-md"
+                  className="w-24 h-24 object-cover rounded-xl shadow-md"
                 />
-                <h3 className="font-semibold text-lg">{m.nom}</h3>
-
-                <div className="flex flex-col items-center text-xs text-gray-500 mt-1">
+                <h3 className="font-semibold text-lg mt-2">{m.nom}</h3>
+                <div className="flex flex-col items-center text-xs text-gray-500 mt-3">
                   <img
                     src={
                       m.utilisateur_photo_profil
@@ -90,17 +107,23 @@ export default function AllData() {
                         : '/avatar.png'
                     }
                     alt={m.utilisateur_nom || 'Propriétaire'}
-                    className="w-10 h-10 object-cover rounded-full mb-1"
+                    className="w-10 h-10 object-cover rounded-full mb-1 border border-gray-300"
                   />
-                  <p className="text-sm">{m.utilisateur_nom}</p>
+                  <p className="text-sm flex items-center gap-1">
+                    <User size={14} />
+                    {m.utilisateur_nom}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </section>
         <section>
-          <h2 className="text-2xl font-bold mb-4">Articles</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Package className="w-6 h-6" />
+            <h2 className="text-2xl font-bold">Articles</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((a) => {
               const articlePhoto = a.photo_article
                 ? base64ToImageSrc(a.photo_article)
@@ -117,27 +140,28 @@ export default function AllData() {
               return (
                 <div
                   key={a.id}
-                  className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 flex flex-col items-center gap-3 bg-gray-50 dark:bg-gray-900"
+                  className="border border-gray-300 dark:border-gray-700 rounded-2xl p-5 flex flex-col items-center gap-3 
+                             bg-gray-50 dark:bg-gray-900 shadow-sm hover:shadow-xl transition-all"
                 >
                   <img
                     src={articlePhoto}
                     alt={a.nom}
-                    className="w-24 h-24 object-cover rounded-md"
+                    className="w-24 h-24 object-cover rounded-xl shadow-md"
                   />
                   <h3 className="font-semibold text-lg text-center">{a.nom}</h3>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">
                     {formatNumber(a.prix)} {a.devise}
                   </p>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-3 mt-3">
                     <img
                       src={magasinLogo}
                       alt="Logo magasin"
-                      className="w-10 h-10 object-cover rounded-md"
+                      className="w-10 h-10 object-cover rounded-xl border border-gray-300"
                     />
                     <img
                       src={proprietairePhoto}
                       alt="Propriétaire"
-                      className="w-10 h-10 object-cover rounded-full"
+                      className="w-10 h-10 object-cover rounded-full border border-gray-300"
                     />
                   </div>
                 </div>

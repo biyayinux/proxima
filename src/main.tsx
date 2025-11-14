@@ -7,9 +7,11 @@ import SignIn from './pages/auth/signIn';
 import SignUp from './pages/auth/signUp';
 import AddUser from './pages/auth/addUser';
 import Profile from './pages/users/profile';
+
 import AddMagasin from './pages/magasins/userAddMagasin';
 import MagasinUser from './pages/magasins/getMagasinsUser';
-import MagasinDetail from './pages/magasins/[id]';
+import MagasinDetail from './pages/[id]';
+
 import UserAddArticle from './pages/articles/userAddArticle';
 import Search from './pages/search/searchPhoto';
 import All from './pages/all';
@@ -22,7 +24,7 @@ import './assets/css/index.css';
 function AppWrapper() {
   const location = useLocation();
 
-  // Pages d'auth sur lesquelles on ne veut pas afficher navbar / mobile header
+  // Pages d'auth sans header/navbar
   const isAuthPage = ['/signin', '/signUp', '/addUser'].includes(
     location.pathname,
   );
@@ -31,6 +33,7 @@ function AppWrapper() {
     <>
       {!isAuthPage && <Navbar />}
       {!isAuthPage && <MobileHeader />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
@@ -39,7 +42,7 @@ function AppWrapper() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/magasin/add" element={<AddMagasin />} />
         <Route path="/magasin" element={<MagasinUser />} />
-        <Route path="/magasin/:id" element={<MagasinDetail />} />
+        <Route path="/magasin/detail/:id" element={<MagasinDetail />} />
         <Route path="/magasin/article/add/:id" element={<UserAddArticle />} />
         <Route path="/search" element={<Search />} />
         <Route path="/all" element={<All />} />

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ImagePlus, Search } from 'lucide-react';
 import { useMe } from '../../hooks/users/me';
 import { base64ToImageSrc } from '../../utils/images/base64Image';
@@ -24,6 +25,7 @@ interface QueryResult {
 
 export default function RechercheImage() {
   const { user } = useMe();
+  const navigate = useNavigate();
   const [photoBase64, setPhotoBase64] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
@@ -49,18 +51,15 @@ export default function RechercheImage() {
     );
   }, []);
 
-  // Gestion de la photo
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
-      // Conversion en Base64
       const base64 = await toBase64(file);
       setPhotoBase64(base64 as string);
     }
   };
 
-  // Recherche
   const handleSearch = async () => {
     if (!photoBase64) {
       setError('Veuillez sélectionner une image');
@@ -92,6 +91,7 @@ export default function RechercheImage() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur lors de la recherche');
+
       setResults(data.data?.query_results || []);
     } catch (err: any) {
       console.error(err);
@@ -99,6 +99,10 @@ export default function RechercheImage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStoreClick = (storeId: number) => {
+    navigate(`/magasin/detail/${storeId}`);
   };
 
   return (
@@ -133,7 +137,7 @@ export default function RechercheImage() {
           onClick={handleSearch}
           disabled={loading || !photoBase64}
           className="flex items-center gap-2 px-5 py-2 rounded-lg border border-gray-700
-        bg-black text-white dark:bg-white dark:text-black hover:opacity-80
+          bg-black text-white dark:bg-white dark:text-black hover:opacity-80
           transition disabled:opacity-50"
         >
           <Search size={18} />
@@ -165,7 +169,10 @@ export default function RechercheImage() {
               {formatNumber(r.price)} {r.devise}
             </p>
             {r.store && (
-              <div className="flex flex-col items-center text-center text-xs text-gray-500">
+              <div
+                onClick={() => handleStoreClick(r.store.id)}
+                className="flex flex-col items-center text-center text-xs text-gray-500 cursor-pointer hover:opacity-80 transition"
+              >
                 <img
                   src={
                     r.store.logo
