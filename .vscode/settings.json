@@ -1,0 +1,21 @@
+{
+	// FORMAT AUTOMATIQUE
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+
+	// PRETTIER COMME FORMATTEUR PAR DÉFAUT
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+
+	// Forcer Prettier sur Svelte
+	"[svelte]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+
+	// Forcer Prettier sur TS/JS
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
+}

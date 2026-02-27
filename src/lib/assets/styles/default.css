@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+
+/* Déclaration de la police Variable */
+@font-face {
+	font-family: 'Comfortaa';
+	src: url('/fonts/Comfortaa-VariableFont_wght.woff2') format('woff2-variations');
+	font-weight: 300 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* Application globale */
+body {
+	font-family: 'Comfortaa', sans-serif;
+}
